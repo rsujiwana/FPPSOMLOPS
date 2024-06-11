@@ -12,10 +12,6 @@ on:
         - main
         - develop
         - 'feature/**'
-        paths:
-        - '**.py'
-        - 'Dockerfile'
-        - 'entrypoint.sh'
 
 concurrency:
     group: ${{ github.workflow}}-${{ github.ref }}
