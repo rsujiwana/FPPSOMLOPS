@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - develop
+      - Develop
   pull_request:
     branches:
-      - develop
-
+      - Develop
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
