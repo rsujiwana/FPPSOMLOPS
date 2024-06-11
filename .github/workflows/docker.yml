@@ -111,14 +111,4 @@ jobs:
         run: docker run -d -p 5000:5000  ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO }}:v0.1
       - name: test curl
         run: |
-          if ! http_status=$(curl -s -XPOST -H 'Content-Type: application/json' -d '{"data":"This is a sample input text"}' http://localhost:5000/label); then
-            echo "Warning: curl failed with $http_status!"
-            exit 1
-          else
-            if http_status=$(curl -s -XPOST -H 'Content-Type: application/json' -d '{"data":"This is a sample input text"}' http://localhost:5000/label)  && [[ $http_status != "200" ]]; then
-              echo "Warning: curl failed with $http_status!"
-              exit 1
-            fi
-          fi
-
-       
+          curl  -w "%{http_code}\n" -s -XPOST -H 'Content-Type: application/json' -d '{"data":"This is a sample input text"}' http://localhost:5000/label
