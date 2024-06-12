@@ -26,8 +26,29 @@
                 body: JSON.stringify({ data: textInput })
             });
             const result = await response.json();
-            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+            displayResult(result);
         });
+
+        function displayResult(result) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+
+            if (result && Array.isArray(result)) {
+                result.forEach(item => {
+                    const { aspect, sentiment, confidence } = item;
+                    const resultItem = document.createElement('div');
+                    resultItem.innerHTML = `
+                        <p><strong>Aspect:</strong> ${aspect}</p>
+                        <p><strong>Sentiment:</strong> ${sentiment}</p>
+                        <p><strong>Confidence:</strong> ${confidence}</p>
+                        <hr>
+                    `;
+                    resultDiv.appendChild(resultItem);
+                });
+            } else {
+                resultDiv.innerHTML = '<p>No results found.</p>';
+            }
+        }
     </script>
 </body>
 </html>
