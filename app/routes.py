@@ -5,7 +5,6 @@ from model.labeling_model import label_text
 def index():
     return render_template("index.html")
 
-
 @app.route("/label", methods=["POST"])
 def label_data_route():
     data = request.json["data"]
