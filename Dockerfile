@@ -11,8 +11,8 @@ RUN find /usr/bin \( -perm /4000 -o -perm /2000 \) -type f -exec chmod a-s {} + 
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /fpmlops -s /sbin/nologin appuser
 
 
-WORKDIR /fpmlops
-RUN chown appuser:appgroup /fpmlops
+WORKDIR /fppsomlops
+RUN chown appuser:appgroup /fppsomlops
 
 
 
