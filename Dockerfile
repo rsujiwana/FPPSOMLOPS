@@ -32,7 +32,7 @@ RUN python -m spacy download en_core_web_sm
 # change owner and group
 # change permission
 COPY . .
-RUN chown -R appuser:appgroup /fpmlops && \
+RUN chown -R appuser:appgroup /fppsomlops && \
     chmod 755 entrypoint.sh
 
 # expose port 5000
