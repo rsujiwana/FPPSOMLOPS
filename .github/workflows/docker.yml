@@ -69,13 +69,13 @@ jobs:
         - name: Build image from Dockerfile
           env:
             TAG: ${{ env.REPO }}:v0.1
-            DOCKER_CONTENT_TRUST: 1
+            DOCKER_CONTENT_TRUS: 1
           run: |
              docker build -t $TAG .          
         - name: Run dockle
           uses: goodwithtech/dockle-action@v0.1.2
           env:
-            DOCKER_CONTENT_TRUST: 1
+            DOCKER_CONTENT_TRUS: 1
           with:
             image: ${{ env.REPO }}:v0.1
             format: 'list'
