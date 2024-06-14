@@ -22,7 +22,6 @@ permissions:
 
 jobs:
     hadolint:
-      github.event_name	== 'pull_request'
       permissions:
           contents: write
           issues: write
@@ -88,7 +87,6 @@ jobs:
 
     trivy_and_push:
       needs: [hadolint]
-      github.event_name	== 'pull_request'
       runs-on: ubuntu-latest
       steps:
       - name: Checkout
