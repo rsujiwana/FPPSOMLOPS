@@ -5,12 +5,12 @@ on:
         types: [opened, reopened]
         branches:
         - main
-        - develop
+        - dev
         - 'feature/**'
     push:
         branches:
         - main
-        - develop
+        - dev
         - 'feature/**'
 
 concurrency:
@@ -18,7 +18,7 @@ concurrency:
     cancel-in-progress: true
 
 permissions:
-    contents: read
+    contents: write all
 
 jobs:
     hadolint:
