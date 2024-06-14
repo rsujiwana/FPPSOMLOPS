@@ -13,7 +13,6 @@
         <button type="submit">Label Text</button>
     </form>
     <div id="result"></div>
-
     <script>
         document.getElementById('labelForm').addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -21,6 +20,38 @@
             const response = await fetch('/label', {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: textInput })
+            });
+            const result = await response.json();
+            displayResult(result);
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        });
+
+        function displayResult(result) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+
+            if (result && Array.isArray(result)) {
+                result.forEach(item => {
+                    const { aspect, sentiment, confidence } = item;
+                    const resultItem = document.createElement('div');
+                    resultItem.innerHTML = `
+                        <p><strong>Aspect:</strong> ${aspect}</p>
+                        <p><strong>Sentiment:</strong> ${sentiment}</p>
+                        <p><strong>Confidence:</strong> ${confidence}</p>
+                        <hr>
+                    `;
+                    resultDiv.appendChild(resultItem);
+                });
+            } else {
+                resultDiv.innerHTML = '<p>No results found.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ data: textInput })
