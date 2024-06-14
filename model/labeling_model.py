@@ -1,10 +1,8 @@
 import json
 import os
 from pyabsa import AspectTermExtraction as ATEPC, available_checkpoints
-
 # you can view all available checkpoints by calling available_checkpoints()
 checkpoint_map = available_checkpoints()
-
 aspect_extractor = ATEPC.AspectExtractor('multilingual',
                                          auto_device=True,  # False means load model on CPU
                                          cal_perplexity=True,
@@ -14,7 +12,7 @@ def label_text(text):
     # Implementasi pelabelan dengan model yang sudah dilatih
     result = aspect_extractor.predict([text],
                          save_result=False,
-                         print_result=False,  # print the result
+                         print_result=True,  # print the result
                          ignore_error=True,  # ignore the error when the model cannot predict the input
                          )
 
@@ -33,4 +31,3 @@ def label_text(text):
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(existing_results, f, ensure_ascii=False, indent=4)
     return result
-

@@ -8,11 +8,11 @@ RUN find /usr/bin \( -perm /4000 -o -perm /2000 \) -type f -exec chmod a-s {} + 
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/*
     
-RUN groupadd -r appgroup && useradd -r -g appgroup -d /fpmlops -s /sbin/nologin appuser
+RUN groupadd -r appgroup && useradd -r -g appgroup -d /fppsomlops -s /sbin/nologin appuser
 
 
-WORKDIR /fpmlops
-RUN chown appuser:appgroup /fpmlops
+WORKDIR /fppsomlops
+RUN chown appuser:appgroup /fppsomlops
 
 
 
@@ -32,7 +32,7 @@ RUN python -m spacy download en_core_web_sm
 # change owner and group
 # change permission
 COPY . .
-RUN chown -R appuser:appgroup /fpmlops && \
+RUN chown -R appuser:appgroup /fppsomlops && \
     chmod 755 entrypoint.sh
 
 # expose port 5000
