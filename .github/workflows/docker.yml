@@ -5,12 +5,12 @@ on:
         types: [opened, reopened]
         branches:
         - main
-        - develop
+        - dev
         - 'feature/**'
     push:
         branches:
         - main
-        - develop
+        - dev
         - 'feature/**'
         paths:
         - '**.py'
@@ -26,7 +26,7 @@ permissions:
 
 jobs:
     hadolint:
-      if: github.event_name	== 'pull_request'
+      if: github.event_name == 'pull_request'
       permissions:
           contents: write
           issues: write
