@@ -5,13 +5,17 @@ on:
         types: [opened, reopened]
         branches:
         - main
-        - dev
+        - develop
         - 'feature/**'
     push:
         branches:
         - main
-        - dev
+        - develop
         - 'feature/**'
+        paths:
+        - '**.py'
+        - 'Dockerfile'
+        - 'entrypoint.sh'
 
 concurrency:
     group: ${{ github.workflow}}-${{ github.ref }}
@@ -22,6 +26,7 @@ permissions:
 
 jobs:
     hadolint:
+      if: github.event_name	== 'pull_request'
       permissions:
           contents: write
           issues: write
@@ -33,7 +38,7 @@ jobs:
         - name: Run Docker linting using Hadolint
           id: hadolint
           uses: hadolint/hadolint-action@v3.1.0
-          with: 
+          with:
             failure-threshold: warning
             ignore: 'DL3018,DL3006,DL3008'
         - name: Update Pull Request
@@ -47,7 +52,7 @@ jobs:
                   ${process.env.HADOLINT_RESULTS}
                   \`\`\`
                   `;
-          
+
                   github.rest.issues.createComment({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
