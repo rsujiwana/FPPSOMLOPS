@@ -10,7 +10,6 @@ aspect_extractor = ATEPC.AspectExtractor('multilingual',
 def label_text(text):
     # Implementasi pelabelan dengan model yang sudah dilatih
     result = aspect_extractor.predict([text],
-                         save_result=False,
                          save_result=True,
                          print_result=True,  # print the result
                          ignore_error=True,  # ignore the error when the model cannot predict the input
