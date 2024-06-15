@@ -12,6 +12,10 @@ on:
         - main
         - dev
         - 'feature/**'
+        paths:
+        - '**.py'
+        - 'Dockerfile'
+        - 'entrypoint.sh'
 concurrency:
     group: ${{ github.workflow}}-${{ github.ref }}
     cancel-in-progress: true
