@@ -5,7 +5,7 @@ provider "google" {
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = var.network_name
+  name = "terraform-network"
 }
 
 resource "google_compute_instance" "vm_instance" {
@@ -16,7 +16,6 @@ resource "google_compute_instance" "vm_instance" {
   boot_disk {
     initialize_params {
       image = var.image
-      size = 50 // Ukuran disk dalam gigabyte
     }
   }
 
@@ -26,16 +25,14 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   metadata_startup_script = <<-EOF
-  #!/bin/bash
-  sudo apt-get update -y
-  sudo apt-get install -y docker.io
-  sudo systemctl start docker
-  sudo usermod -aG docker ${var.gcp_user}
-  sudo docker pull kurniarafi44078/fppsomlops:v0.1
-  sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-  sudo chmod 755 /usr/local/bin/docker-compose
-EOF
-
+    #!/bin/bash
+    sudo apt-get update -y
+    sudo apt-get install -y docker.io
+    sudo systemctl start docker
+    sudo usermod -aG docker ${var.gcp_user}
+    sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo chmod 755 /usr/local/bin/docker-compose
+  EOF
 
   service_account {
     email  = var.service_account_email

@@ -18,7 +18,7 @@ variable "region" {
 variable "instance_type" {
   description = "The machine type to use for the VM"
   type        = string
-  default     = "e2-standard-4"
+  default     = "e2-medium"
 }
 
 variable "image" {
@@ -41,11 +41,7 @@ variable "default_zone" {
 variable "gcp_user" {
   description = "Default GCP user"
   type        = string
-  default     = "tsaniyah_coshack1019"
+  default     = "default"
 }
 
-variable "network_name" {
-  type    = string
-  default = "terraform-network"
-}
 
