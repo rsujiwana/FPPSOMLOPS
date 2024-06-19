@@ -1,7 +1,7 @@
 variable "credentials_file" {
   description = "Path to the service account key file"
   type        = string
-  default     = ${{ secrets.GCP_KEY }}
+  default     = "${{ secrets.GCP_KEY }}"
 }
 
 variable "project_id" {
