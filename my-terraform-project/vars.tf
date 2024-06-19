@@ -1,12 +1,13 @@
 variable "credentials_file" {
   description = "Path to the service account key file"
   type        = string
-  default     = "~/.gcp/gcp-key.json"
+  default     = "${{ secrets.GCP_KEY }}"
 }
 
 variable "project_id" {
   description = "The ID of the GCP project to use"
   type        = string
+  default     = "fppsomlops"
 }
 
 variable "region" {
@@ -30,6 +31,7 @@ variable "image" {
 variable "service_account_email" {
   description = "The email of the service account to use"
   type        = string
+  default     = "terraform-service-account@fppsomlops.iam.gserviceaccount.com"
 }
 
 variable "default_zone" {
