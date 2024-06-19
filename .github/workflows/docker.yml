@@ -21,7 +21,7 @@ concurrency:
     cancel-in-progress: true
 
 permissions:
-    contents: write all
+    contents: write
 
 jobs:
     hadolint:
