@@ -53,7 +53,7 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: my-terraform-project
-
+        
       - name: Terraform Plan
         run: terraform plan
         working-directory: my-terraform-project
