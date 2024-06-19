@@ -34,6 +34,7 @@ jobs:
           python -m pytest --rootdir="." test/test_model.py
 
   terraform:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
