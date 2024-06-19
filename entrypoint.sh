@@ -1,12 +1,6 @@
 #!/bin/sh
+# entrypoint.sh
 
-set -o errexit
-set -o nounset
+# Jalankan uWSGI
+uwsgi --ini uwsgi.ini
 
-
-/usr/local/bin/uwsgi --http 0.0.0.0:5000 \
-    --plugins python3 \
-    --wsgi run:app
-
-echo ""
-echo "$@"
