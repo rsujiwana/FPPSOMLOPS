@@ -7,6 +7,7 @@ variable "credentials_file" {
 variable "project_id" {
   description = "The ID of the GCP project to use"
   type        = string
+  default     = "fppsomlops"
 }
 
 variable "region" {
@@ -30,6 +31,7 @@ variable "image" {
 variable "service_account_email" {
   description = "The email of the service account to use"
   type        = string
+  default     = "terraform-service-account@fppsomlops.iam.gserviceaccount.com"
 }
 
 variable "default_zone" {
