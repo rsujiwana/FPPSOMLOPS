@@ -23,8 +23,6 @@ COPY requirements.txt ./
 # install uwsgi and the requirement
 # upgrade pip
 RUN python -m pip install --no-cache-dir --upgrade pip==24.0 && \
-    apt-get update && \
-    apt-get install --no-install-recommends -y uwsgi-plugin-python3 && \
     python -m pip install --no-cache-dir uwsgi==2.0.26 && \
     python -m pip install --no-cache-dir -r requirements.txt
 
