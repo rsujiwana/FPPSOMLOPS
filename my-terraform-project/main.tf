@@ -5,17 +5,18 @@ provider "google" {
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = "terraform-network"
+  name = "fppsomlops-network"
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name         = "terraform-instance"
+  name         = "fppsomlops-instance"
   machine_type = var.instance_type
   zone         = var.default_zone
 
   boot_disk {
     initialize_params {
       image = var.image
+      size = 50
     }
   }
 
@@ -24,15 +25,7 @@ resource "google_compute_instance" "vm_instance" {
     access_config {}
   }
 
-  metadata_startup_script = <<-EOF
-    #!/bin/bash
-    sudo apt-get update -y
-    sudo apt-get install -y docker.io
-    sudo systemctl start docker
-    sudo usermod -aG docker ${var.gcp_user}
-    sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-    sudo chmod 755 /usr/local/bin/docker-compose
-  EOF
+  metadata_startup_script = file("startup-script.sh")
 
   service_account {
     email  = var.service_account_email
@@ -40,6 +33,10 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   tags = ["http-server", "https-server"]
+}
+
+output "instance_ip" {
+  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
 }
 
 resource "google_compute_firewall" "default" {
