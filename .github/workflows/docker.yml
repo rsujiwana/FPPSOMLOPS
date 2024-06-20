@@ -138,7 +138,7 @@ jobs:
               #exit 1
             fi
           fi
-
+          
     terraform:
       needs: [trivy_and_push]
       runs-on: ubuntu-latest
