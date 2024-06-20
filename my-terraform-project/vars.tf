@@ -1,7 +1,7 @@
 variable "credentials_file" {
   description = "Path to the service account key file"
   type        = string
-  default     = "${{ secrets.GCP_KEY }}"
+  default     = file("${path.module}/gcp-key.json")
 }
 
 variable "project_id" {
@@ -19,7 +19,7 @@ variable "region" {
 variable "instance_type" {
   description = "The machine type to use for the VM"
   type        = string
-  default     = "e2-medium"
+  default     = "e2-standard-8"
 }
 
 variable "image" {
@@ -43,7 +43,7 @@ variable "default_zone" {
 variable "gcp_user" {
   description = "Default GCP user"
   type        = string
-  default     = "default"
+  default     = "tsaniyah_coshack1019"
 }
 
 
