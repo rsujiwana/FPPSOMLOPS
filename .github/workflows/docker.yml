@@ -159,7 +159,7 @@ jobs:
         - name: Create credentials file
           run: |
             mkdir -p ~/.gcp
-            echo "${{ secrets.GCP_KEY }}" > ~/.gcp/gcp-key.json
+            echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
             chmod 600 ~/.gcp/gcp-key.json
 
         - name: Terraform Init
