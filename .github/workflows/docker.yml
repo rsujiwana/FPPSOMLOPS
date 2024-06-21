@@ -1,98 +1,68 @@
 name: Build Docker
 
 on:
-    pull_request:
-        types: [opened, reopened]
-        branches:
-        - main
-        - dev
-        - 'feature/**'
-    push:
-        branches:
-        - main
-        - dev
-        - 'feature/**'
-        paths:
-        - '**.py'
-        - 'Dockerfile'
-        - 'entrypoint.sh'
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
+      - dev
+      - 'feature/**'
+  push:
+    branches:
+      - main
+      - dev
+      - 'feature/**'
+    paths:
+      - '**.py'
+      - 'Dockerfile'
+      - 'entrypoint.sh'
+      
 concurrency:
-    group: ${{ github.workflow}}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
-    contents: write
+  contents: write
 
 jobs:
-    hadolint:
-      if: github.event_name == 'pull_request'
-      permissions:
-          contents: write
-          issues: write
-          pull-requests: write
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-        - name: Run Docker linting using Hadolint
-          id: hadolint
-          uses: hadolint/hadolint-action@v3.1.0
-          with:
-            failure-threshold: warning
-            ignore: 'DL3018,DL3006,DL3008'
-        - name: Update Pull Request
-          uses: actions/github-script@v6
-          if: github.event_name == 'pull_request'
-          with:
-              script: |
-                  const output = `
-                  #### Hadolint: \`${{ steps.hadolint.outcome }}\`
-                  \`\`\`
-                  ${process.env.HADOLINT_RESULTS}
-                  \`\`\`
-                  `;
+  hadolint:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Docker linting using Hadolint
+        id: hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          failure-threshold: warning
+          ignore: 'DL3018,DL3006,DL3008'
+      - name: Update Pull Request
+        uses: actions/github-script@v6
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const output = `
+            #### Hadolint: \`${{ steps.hadolint.outcome }}\`
+            \`\`\`
+            ${process.env.HADOLINT_RESULTS}
+            \`\`\`
+            `;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
 
-                  github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: output
-                  })
-
-    # trivy:
-    #   needs: [hadolint]
-    #   if: github.event_name	== 'pull_request'
-    #   runs-on: ubuntu-latest
-    #   steps:
-    #     - name: Checkout
-    #       uses: actions/checkout@v4
-    #     - name: convert repo name to lowercase
-    #       run: |
-    #         echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-    #     - name: Set up Docker Buildx
-    #       uses: docker/setup-buildx-action@v3
-    #     - name: Build image from Dockerfile
-    #       env:
-    #         TAG: ${{ env.REPO }}:v0.1
-    #         DOCKER_CONTENT_TRUST: 1
-    #       run: |
-    #          docker build -t $TAG .          
-    #     - name: Run dockle
-    #       uses: goodwithtech/dockle-action@v0.1.2
-    #       env:
-    #         DOCKER_CONTENT_TRUS: 1
-    #       with:
-    #         image: ${{ env.REPO }}:v0.1
-    #         format: 'list'
-    #         exit-code: '1'
-    #         exit-level: 'warn'
-    #         ignore: 'CIS-DI-0006,CIS-DI-0010'
-    #         accept-key: 'GNUPGHOME,PYTHON_GET_PIP_URL,LANG,PYTHONDONTWRITEBYTECODE,PATH,PYTHON_PIP_VERSION,FLASK_APP,PYTHON_SETUPTOOLS_VERSION,PYTHON_GET_PIP_SHA256,LANG,PYTHON_VERSION,--strip-components,gnuArch'
-
-    trivy_and_push:
-      needs: [hadolint]
-      runs-on: ubuntu-latest
-      steps:
+  trivy_and_push:
+    needs: [hadolint]
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Login to Docker Hub
@@ -138,42 +108,41 @@ jobs:
               #exit 1
             fi
           fi
-          
+
   terraform:
     needs: [trivy_and_push]
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Setup Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0.2.0
-      with:
-        service_account_key: ${{ secrets.GCP_KEY }}
-        export_default_credentials: true
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-
-    - name: Decode and save Google Cloud credentials
-      run: |
-        mkdir -p ~/.gcp
-        echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
-        chmod 600 ~/.gcp/gcp-key.json
-        cat ~/.gcp/gcp-key.json  # This line is for debugging
-      shell: bash
-
-    - name: Verify Google Cloud credentials
-      run: cat ~/.gcp/gcp-key.json
-
-    - name: Terraform Init
-      run: terraform init
-      working-directory: my-terraform-project
-      
-    - name: Terraform Apply
-      run: terraform apply -auto-approve -var="credentials_file=~/.gcp/gcp-key.json"
-      working-directory: my-terraform-project
-
     env:
       GOOGLE_APPLICATION_CREDENTIALS: ~/.gcp/gcp-key.json
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_KEY }}
+          export_default_credentials: true
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Decode and save Google Cloud credentials
+        run: |
+          mkdir -p ~/.gcp
+          echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
+          chmod 600 ~/.gcp/gcp-key.json
+          cat ~/.gcp/gcp-key.json  # This line is for debugging
+        shell: bash
+
+      - name: Verify Google Cloud credentials
+        run: cat ~/.gcp/gcp-key.json
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: my-terraform-project
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="credentials_file=~/.gcp/gcp-key.json"
+        working-directory: my-terraform-project
