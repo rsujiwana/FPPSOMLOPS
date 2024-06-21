@@ -3,13 +3,6 @@ provider "google" {
   region  = var.region
 }
 
-# Data block to get existing instance
-data "google_compute_instance" "existing_instance" {
-  name   = "fppsomlops-instance"
-  zone   = var.default_zone
-  count  = 1
-}
-
 resource "google_compute_network" "vpc_network" {
   name = "fppsomlops-network"
 }
@@ -39,10 +32,10 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   tags = ["http-server", "https-server"]
+}
 
-  lifecycle {
-    create_before_destroy = true
-  }
+output "instance_ip" {
+  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
 }
 
 resource "google_compute_firewall" "default" {
@@ -55,8 +48,4 @@ resource "google_compute_firewall" "default" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-}
-
-output "instance_ip" {
-  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
 }
