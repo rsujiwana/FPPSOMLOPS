@@ -1,7 +1,7 @@
 variable "credentials_file" {
   description = "Path to the service account key file"
   type        = string
-  default     = "~/.gcp/gcp-key.json"
+  default     = ""
 }
 
 variable "project_id" {
