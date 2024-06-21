@@ -1,10 +1,11 @@
 provider "google" {
-  project     = var.project_id
-  region      = var.region
+  project = var.project_id
+  region  = var.region
 }
 
-resource "google_compute_network" "vpc_network" {
-  name = "fppsomlops-network"
+data "google_compute_network" "existing_network" {
+  name    = "fppsomlops-network"
+  project = var.project_id
 }
 
 resource "google_compute_instance" "vm_instance" {
@@ -15,12 +16,12 @@ resource "google_compute_instance" "vm_instance" {
   boot_disk {
     initialize_params {
       image = var.image
-      size = 50
+      size  = 50
     }
   }
 
   network_interface {
-    network = google_compute_network.vpc_network.name
+    network = data.google_compute_network.existing_network.name
     access_config {}
   }
 
@@ -40,7 +41,7 @@ output "instance_ip" {
 
 resource "google_compute_firewall" "default" {
   name    = "allow-http-https-ssh"
-  network = google_compute_network.vpc_network.name
+  network = data.google_compute_network.existing_network.name
 
   allow {
     protocol = "tcp"
