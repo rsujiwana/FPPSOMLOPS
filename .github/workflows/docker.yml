@@ -161,6 +161,7 @@ jobs:
             mkdir -p ~/.gcp
             echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
             chmod 600 ~/.gcp/gcp-key.json
+            cat ~/.gcp/gcp-key.json  # Add this line to check the content
 
         - name: Terraform Init
           run: terraform init
