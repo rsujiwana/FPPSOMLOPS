@@ -161,5 +161,5 @@ jobs:
         working-directory: my-terraform-project
         
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="credentials_file=${{ secrets.GCP_KEY }}"
         working-directory: my-terraform-project
