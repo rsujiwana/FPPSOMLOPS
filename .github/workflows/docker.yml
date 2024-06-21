@@ -112,8 +112,6 @@ jobs:
   terraform:
     needs: [trivy_and_push]
     runs-on: ubuntu-latest
-    env:
-      GOOGLE_APPLICATION_CREDENTIALS: ~/.gcp/gcp-key.json
 
     steps:
       - name: Checkout repository
@@ -128,21 +126,10 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Decode and save Google Cloud credentials
-        run: |
-          mkdir -p ~/.gcp
-          echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
-          chmod 600 ~/.gcp/gcp-key.json
-          cat ~/.gcp/gcp-key.json  # This line is for debugging
-        shell: bash
-
-      - name: Verify Google Cloud credentials
-        run: cat ~/.gcp/gcp-key.json
-
       - name: Terraform Init
         run: terraform init
         working-directory: my-terraform-project
       
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var="credentials_file=~/.gcp/gcp-key.json"
+        run: terraform apply -auto-approve
         working-directory: my-terraform-project
