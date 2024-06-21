@@ -109,6 +109,7 @@ jobs:
             fi
           fi
 
+
   terraform:
     needs: [trivy_and_push]
     runs-on: ubuntu-latest
@@ -125,6 +126,11 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Destroy VM (if exists)
+        run: terraform destroy -auto-approve -target=google_compute_instance.vm_instance
+        working-directory: my-terraform-project
+        continue-on-error: true  # Ignore error if the resource does not exist
 
       - name: Terraform Init
         run: terraform init
