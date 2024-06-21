@@ -140,26 +140,31 @@ jobs:
           fi
           
     terraform:
-      needs: [trivy_and_push]
-      runs-on: ubuntu-latest
+        needs: [trivy_and_push]
+        runs-on: ubuntu-latest
 
-      steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
 
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.GCP_KEY }}
-          export_default_credentials: true
+        - name: Setup Google Cloud SDK
+          uses: google-github-actions/setup-gcloud@v0.2.0
+          with:
+            service_account_key: ${{ secrets.GCP_KEY }}
+            export_default_credentials: true
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v1
 
-      - name: Terraform Init
-        run: terraform init
-        working-directory: my-terraform-project
-        
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var="credentials_file=${{ secrets.GCP_KEY }}"
-        working-directory: my-terraform-project
+        - name: Create credentials file
+          run: |
+            echo "${{ secrets.GCP_KEY }}" > ~/.gcp/gcp-key.json
+            chmod 600 ~/.gcp/gcp-key.json
+
+        - name: Terraform Init
+          run: terraform init
+          working-directory: my-terraform-project
+      
+        - name: Terraform Apply
+          run: terraform apply -auto-approve
+          working-directory: my-terraform-project
