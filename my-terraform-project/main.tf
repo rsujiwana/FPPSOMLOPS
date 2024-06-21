@@ -3,18 +3,21 @@ provider "google" {
   region  = var.region
 }
 
+# Data block to get existing instance
 data "google_compute_instance" "existing_instance" {
-  name    = "fppsomlops-instance"
-  zone    = var.default_zone
-  project = var.project_id
+  name   = "fppsomlops-instance"
+  zone   = var.default_zone
+  count  = 1
+}
+
+resource "google_compute_network" "vpc_network" {
+  name = "fppsomlops-network"
 }
 
 resource "google_compute_instance" "vm_instance" {
   name         = "fppsomlops-instance"
   machine_type = var.instance_type
   zone         = var.default_zone
-
-  count = length(data.google_compute_instance.existing_instance) == 0 ? 1 : 0
 
   boot_disk {
     initialize_params {
@@ -36,22 +39,15 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   tags = ["http-server", "https-server"]
-}
 
-output "instance_ip" {
-  value = google_compute_instance.vm_instance[0].network_interface[0].access_config[0].nat_ip
-}
-
-data "google_compute_firewall" "existing_firewall" {
-  name    = "allow-http-https-ssh"
-  project = var.project_id
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "google_compute_firewall" "default" {
   name    = "allow-http-https-ssh"
   network = google_compute_network.vpc_network.name
-
-  count = length(data.google_compute_firewall.existing_firewall) == 0 ? 1 : 0
 
   allow {
     protocol = "tcp"
@@ -59,4 +55,8 @@ resource "google_compute_firewall" "default" {
   }
 
   source_ranges = ["0.0.0.0/0"]
+}
+
+output "instance_ip" {
+  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
 }
