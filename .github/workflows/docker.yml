@@ -139,34 +139,41 @@ jobs:
             fi
           fi
           
-    terraform:
-        needs: [trivy_and_push]
-        runs-on: ubuntu-latest
+  terraform:
+    needs: [trivy_and_push]
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout repository
-          uses: actions/checkout@v2
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-        - name: Setup Google Cloud SDK
-          uses: google-github-actions/setup-gcloud@v0.2.0
-          with:
-            service_account_key: ${{ secrets.GCP_KEY }}
-            export_default_credentials: true
+    - name: Setup Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GCP_KEY }}
+        export_default_credentials: true
 
-        - name: Setup Terraform
-          uses: hashicorp/setup-terraform@v1
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
 
-        - name: Create credentials file
-          run: |
-            mkdir -p ~/.gcp
-            echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
-            chmod 600 ~/.gcp/gcp-key.json
-            cat ~/.gcp/gcp-key.json  # Add this line to check the content
+    - name: Decode and save Google Cloud credentials
+      run: |
+        mkdir -p ~/.gcp
+        echo "${{ secrets.GCP_KEY }}" | base64 --decode > ~/.gcp/gcp-key.json
+        chmod 600 ~/.gcp/gcp-key.json
+        cat ~/.gcp/gcp-key.json  # This line is for debugging
+      shell: bash
 
-        - name: Terraform Init
-          run: terraform init
-          working-directory: my-terraform-project
+    - name: Verify Google Cloud credentials
+      run: cat ~/.gcp/gcp-key.json
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: my-terraform-project
       
-        - name: Terraform Apply
-          run: terraform apply -auto-approve
-          working-directory: my-terraform-project
+    - name: Terraform Apply
+      run: terraform apply -auto-approve -var="credentials_file=~/.gcp/gcp-key.json"
+      working-directory: my-terraform-project
+
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ~/.gcp/gcp-key.json
