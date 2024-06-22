@@ -127,14 +127,14 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
+      - name: Terraform Init
+        run: terraform init
+        working-directory: my-terraform-project
+        
       - name: Terraform Destroy All Resources (if exist)
         run: terraform destroy -auto-approve
         working-directory: my-terraform-project
         continue-on-error: true  # Ignore error if the resources do not exist
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: my-terraform-project
       
       - name: Terraform Apply
         run: terraform apply -auto-approve
