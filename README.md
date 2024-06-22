@@ -1,4 +1,4 @@
-##Automated Data Labeling Tool**
+##Automated Data Labeling Tool
 
 Automated data labeling is a crucial aspect of modern machine learning and artificial intelligence workflows. It significantly reduces the time and effort required to prepare labeled datasets, which are essential for training accurate and efficient models. This tool aims to provide a streamlined, efficient, and dynamic solution for automating the data labeling process.
 
@@ -8,6 +8,9 @@ The objective of the Automated Data Labeling Tool is to simplify and expedite th
 Scope
 Automated Labeling: Implementation of machine learning algorithms to automate the labeling of various data types.
 User Interface: Develop a user-friendly interface for easy management and monitoring of the labeling process.
+
+##Workflow of this Project
+<gambar flow>
 
 ## Setup
 
