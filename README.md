@@ -38,7 +38,7 @@ User Interface: Develop a user-friendly interface for easy management and monito
 
 ## Usage
 
-Open a web browser and go to `http://localhost:5000`. Enter the text you want to label and click "Label Text".
+Open a web browser and go to `http://34.72.9.40:80`. Enter the text you want to label and click "Label Text".
 
 ## Testing
 
