@@ -130,6 +130,21 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: my-terraform-project
+
+      - name: Import Google Compute Network
+        run: terraform import google_compute_network.vpc_network projects/fppsomlops/global/networks/fppsomlops-network || echo "Import failed. Proceeding with apply."
+        working-directory: my-terraform-project
+        continue-on-error: true
+
+      - name: Import Google Compute Instance
+        run: terraform import google_compute_instance.vm_instance projects/fppsomlops/zones/us-central1-a/instances/fppsomlops-instance || echo "Import failed. Proceeding with apply."
+        working-directory: my-terraform-project
+        continue-on-error: true
+
+      - name: Import Google Compute Firewall
+        run: terraform import google_compute_firewall.default projects/fppsomlops/global/firewalls/allow-http-https-ssh || echo "Import failed. Proceeding with apply."
+        working-directory: my-terraform-project
+        continue-on-error: true
         
       - name: Terraform Destroy All Resources (if exist)
         run: terraform destroy -auto-approve
