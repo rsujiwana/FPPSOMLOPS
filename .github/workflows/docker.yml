@@ -146,11 +146,6 @@ jobs:
         working-directory: my-terraform-project
         continue-on-error: true
         
-      - name: Terraform Destroy All Resources (if exist)
-        run: terraform destroy -auto-approve
-        working-directory: my-terraform-project
-        continue-on-error: true  # Ignore error if the resources do not exist
-      
       - name: Terraform Apply
         run: terraform apply -auto-approve
         working-directory: my-terraform-project
