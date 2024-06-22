@@ -12,7 +12,7 @@ Automated Labeling: Implementation of machine learning algorithms to automate th
 User Interface: Develop a user-friendly interface for easy management and monitoring of the labeling process.
 
 ## Workflow of this Project
-<gambar flow>
+![Group 1](https://github.com/rsujiwana/FPPSOMLOPS/assets/90408425/972978a1-63e2-4906-b8a8-252747802f22)
 
 ## Setup
 
