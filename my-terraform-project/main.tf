@@ -1,7 +1,6 @@
 provider "google" {
-  credentials = file(var.credentials_file)
-  project     = var.project_id
-  region      = var.region
+  project = var.project_id
+  region  = var.region
 }
 
 resource "google_compute_network" "vpc_network" {
@@ -16,7 +15,7 @@ resource "google_compute_instance" "vm_instance" {
   boot_disk {
     initialize_params {
       image = var.image
-      size = 50
+      size  = 50
     }
   }
 
