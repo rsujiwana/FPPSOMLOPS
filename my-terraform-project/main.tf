@@ -32,6 +32,10 @@ resource "google_compute_instance" "vm_instance" {
   }
 
   tags = ["http-server", "https-server"]
+   lifecycle {
+    prevent_destroy = true
+    ignore_changes  = [metadata_startup_script]  # Example of ignoring changes
+  }
 }
 
 output "instance_ip" {
