@@ -13,7 +13,7 @@ variable "region" {
 variable "instance_type" {
   description = "The machine type to use for the VM"
   type        = string
-  default     = "e2-standard-8"
+  default     = "e2-custom-6-15104"
 }
 
 variable "image" {
